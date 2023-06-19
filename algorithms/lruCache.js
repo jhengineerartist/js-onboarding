@@ -64,7 +64,7 @@ class DoubleLinkedList {
     }
 }
 
-class LRUCache {
+export class LRUCache {
     constructor(capacity) {
         this.capacity = capacity;
         this.cacheNodeMap = new Map();
@@ -73,8 +73,10 @@ class LRUCache {
 
     access(data) {
         let dataStore = null;
+
+        let key = data;
+        console.log(cacheKy)
         if (this.cacheNodeMap.has(data)) {
-            dataStore = cacheNodeMap[data].data;
             // Reset the most recently accessed value
             this.dataList.remove(this.cacheNodeMap[data]);
             this.dataList.prepend(data);
@@ -84,20 +86,11 @@ class LRUCache {
             this.cacheNodeMap[data] = newNode;
         }
 
+        dataStore = this.cacheNodeMap[data].data;
+
         if (this.dataList.length > this.capacity) {
             this.cacheNodeMap.delete(this.dataList.pop());
         }
+        return dataStore;
     }
 }
-
-let printLinkedListContents = (list) => {
-    console.log(list.contents);
-}
-
-let cache = new LRUCache(3);
-cache.access('a')
-cache.access(1)
-cache.access('a')
-cache.access(2)
-cache.access(3)
-printLinkedListContents(cache.dataList)
