@@ -1,6 +1,6 @@
 class DoubleLinkedNode {
     constructor(data) {
-        this.data = data;
+        this.node_data = data;
         this.next = null;
         this.prev = null;
     }
@@ -17,7 +17,7 @@ class DoubleLinkedList {
         let content = []
         let currentNode = this.head;
         while (currentNode) {
-            content.push(currentNode.data);
+            content.push(currentNode.node_data);
             currentNode = currentNode.next;
         }
         return content;
@@ -39,8 +39,12 @@ class DoubleLinkedList {
     }
 
     remove(node) {
-        prev = node.prev ?? null;
-        next = node.next ?? null;
+        let prev = node.prev ?? null;
+        let next = node.next ?? null;
+        if (node == this.tail) {
+            this.tail = prev;
+            this.tail.next = null;
+        }
 
         if (prev) {
             prev.next = next;
@@ -49,17 +53,12 @@ class DoubleLinkedList {
             next.prev = prev;
         }
         this.length--;
+
     }
 
     pop() {
-        let tailData = this.tail.data;
-        let prev = this.tail.prev ?? null;
-
-        if (prev) {
-            this.tail = prev;
-            this.tail.next = null;
-        }
-        this.length--;
+        let tailData = this.tail.node_data;
+        this.remove(this.tail);
         return tailData;
     }
 }
@@ -73,23 +72,24 @@ export class LRUCache {
 
     access(data) {
         let dataStore = null;
-
         let key = data;
-        console.log(cacheKy)
         if (this.cacheNodeMap.has(data)) {
             // Reset the most recently accessed value
-            this.dataList.remove(this.cacheNodeMap[data]);
+            this.dataList.remove(this.cacheNodeMap.get(data));
             this.dataList.prepend(data);
         }
         else {
             let newNode = this.dataList.prepend(data);
-            this.cacheNodeMap[data] = newNode;
+            this.cacheNodeMap.set(data, newNode);
         }
 
-        dataStore = this.cacheNodeMap[data].data;
+        dataStore = this.cacheNodeMap.get(data).node_data;
 
         if (this.dataList.length > this.capacity) {
-            this.cacheNodeMap.delete(this.dataList.pop());
+            // Pop the lru data from the back of the list.
+            // Remove the mapped node from the map
+            let tail_data = this.dataList.pop();
+            this.cacheNodeMap.delete(tail_data);
         }
         return dataStore;
     }
