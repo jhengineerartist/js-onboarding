@@ -1,5 +1,5 @@
 // Returns the index in the array of the target, or -1 if it is not found
-function binSearch(sortedArr, target, start = 0, end = sortedArr.length - 1) {
+export function binSearch(sortedArr, target, start = 0, end = sortedArr.length - 1) {
     indexOfElement = -1;
     if (start <= end) {
         mid = Math.floor((start + end) / 2);
